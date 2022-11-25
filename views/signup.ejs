@@ -1,0 +1,17 @@
+<section class="prompt">
+  <h3>todos</h3>
+  <h1>Sign up</h1>
+  <form action="/signup" method="post">
+    <section>
+      <label for="user-login-id">ログインID</label>
+      <input id="user-login-id" name="user_login_id" type="text" autocomplete="username" maxlength="16" required>
+    </section>
+    <section>
+      <label for="new-password">パスワード</label>
+      <input id="new-password" name="password" type="password" autocomplete="current-password" required>
+    </section>
+    <button type="submit">Sign up</button>
+  </form>
+  <hr>
+  <p class="help">Already have an account? <a href="/login">Sign in</a></p>
+</section>
