@@ -3,8 +3,10 @@
  */
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const session = require('express-session');
+const GoogleStrategy = require('passport-google-oidc');
 const { loginCheck } = require("./passport/local");
+const { googleAuth } = require("./passport/google");
+const session = require('express-session');
 
 module.exports = (app) => {
   /** シリアライズ sessionにtokenを保存 */
@@ -20,12 +22,24 @@ module.exports = (app) => {
       return cb(null, user);
     });
   });
-  /** ログインチェック */
+  /**
+   * ログインチェック
+   */
+  /** local */
   passport.use(new LocalStrategy({
     usernameField: "user_login_id",
     passwordField: "password",
   }, function verify(user_login_id, password, cb) {
-    loginCheck(user_login_id, password, cb)
+    loginCheck(user_login_id, password, cb);
+  }));
+  /** google */
+  passport.use(new GoogleStrategy({
+    clientID: process.env['GOOGLE_CLIENT_ID'],
+    clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
+    callbackURL: '/oauth2/redirect/google',
+    scope: ['profile']
+  }, function verify(issuer, profile, cb) {
+    googleAuth(issuer, profile, cb);
   }));
   /** authorization */
   app.use(session({
@@ -34,4 +48,5 @@ module.exports = (app) => {
     saveUninitialized: false,
   }));
   app.use(passport.authenticate('session'));
+
 }

@@ -1,6 +1,5 @@
 const { executeQuery } = require("../../app/module/mysqlPool");
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
 /**
  * ログインチェック
@@ -14,10 +13,10 @@ const loginCheck = async (user_login_id, password, cb) => {
     /** userIdを検索 */
     const row = await executeQuery('SELECT user_id,hashed_password FROM users WHERE user_login_id = ?', [user_login_id])
     /** ユーザーIDが見つからなかった時 */
-    if (!row) { return cb(null, false, { message: 'ログインID又はパスワードが違います。' }); }
+    if (row.length === 0) { return cb(null, false, { message: 'ログインID又はパスワードが違います。' }); }
     /** passwordが違うとき */
-    bcrypt.compare(password, row[0].hashed_password, (err) => {
-      if (err) return cb(null, false, { message: 'ログインID又はパスワードが違います。' });
+    bcrypt.compare(password, row[0].hashed_password, (err, result) => {
+      if (!result) return cb(null, false, { message: 'ログインID又はパスワードが違います。' });
       var user = {
         id: row[0].user_id,
         user_login_id: user_login_id

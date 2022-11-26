@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 
-var app = express();
+const app = express();
 
 /** authorization */
 require("./config/passport")(app)

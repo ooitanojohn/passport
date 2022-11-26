@@ -1,5 +1,6 @@
-// mysql connect
-require('dotenv').config();
+/**
+ * mysql conf
+ */
 
 const mysqlConf = {
   host: process.env.DB_HOST,
@@ -19,5 +20,6 @@ const mysqlPoolConf = {
   queueLimit: 0,
 };
 
-exports.mysqlConf = mysqlConf;
-exports.mysqlPoolConf = mysqlPoolConf;
+module.exports = { mysqlConf, mysqlPoolConf };
+// exports.mysqlConf = mysqlConf;
+// exports.mysqlPoolConf = mysqlPoolConf;

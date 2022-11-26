@@ -8,12 +8,26 @@ var router = express.Router();
 router.get('/login', (req, res, next) => {
   res.render('login');
 });
+/**
+ * local
+ */
 /** ログインチェック */
 router.post('/login/password', passport.authenticate('local', {
   successReturnToOrRedirect: '/',
   failureRedirect: '/login',
   failureMessage: true
 }));
+/**
+ * google
+ */
+/** ボタン押した時 */
+router.get('/login/federated/google', passport.authenticate('google'));
+/** google認証後リダイレクト */
+router.get('/oauth2/redirect/google', passport.authenticate('google', {
+  successRedirect: '/',
+  failureRedirect: '/login'
+}));
+
 /** ログアウト*/
 router.post('/logout', (req, res, next) => {
   req.logout((err) => {
