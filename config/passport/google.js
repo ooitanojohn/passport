@@ -4,7 +4,7 @@ const { beginTran } = require("../../app/module/mysqlPool");
  * googleログイン
  * @param {string} issuer issuer authサービス先のURL
  * @param {object} profile profile.id 不明 + 名前が帰ってくる
- * @param {function} cb
+ * @return {function} cb
  */
 const googleAuth = async (issuer, profile, cb) => {
   try {

@@ -4,8 +4,10 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const GoogleStrategy = require('passport-google-oidc');
+const { Strategy } = require("passport-twitter");
 const { loginCheck } = require("./passport/local");
 const { googleAuth } = require("./passport/google");
+const { twitterAuth } = require("./passport/twitter");
 const session = require('express-session');
 
 module.exports = (app) => {
@@ -41,6 +43,16 @@ module.exports = (app) => {
   }, function verify(issuer, profile, cb) {
     googleAuth(issuer, profile, cb);
   }));
+  /** twitter */
+  passport.use(new Strategy({
+    consumerKey: process.env['TWITTER_API_KEY'],
+    consumerSecret: process.env['TWITTER_API_SECRET'],
+    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+  },
+    function verify(token, tokenSecret, profile, cb) {
+      twitterAuth(token, tokenSecret, profile, cb);
+    }
+  ));
   /** authorization */
   app.use(session({
     secret: 'keyboard cat',
